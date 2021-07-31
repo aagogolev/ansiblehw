@@ -1,6 +1,16 @@
-описание действий(потом расписать все)
+# Выполнить для запуска проекта:
 
-1 клонируем репу
-2 устанавливаем роли для проекта
-3 дешифруем файл с переменными
-4 запускаем
+## 1. Клонируем репозиторий:
+git clone https://gitlab.ru/alexandr_gogolev/ansiblehw.git
+
+## 2. Установка дополнительных ролей ansible:
+ansible-galaxy install -r requirements.yml --roles-path ./roles
+
+## 3. Дешифруем файл с переменными:
+ansible-vault decrypt ./roles/deploy-app/vars/main.yml
+
+## 4. Запуск: 
+vagrant up
+
+### Дополнительные команды:
+Удаление окружения: vagrant getroy -f

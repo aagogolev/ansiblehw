@@ -1,3 +1,4 @@
 curl -i -X POST -d '{ "username": "user123", "email": "user@example.com", "password_hash": "example" }' -H "Content-Type: application/json" http://192.168.0.161/api/user
 
 curl -i -X GET http://192.168.0.161/api/user
+curl -i -X GET http://192.168.0.161/api/user

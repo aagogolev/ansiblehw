@@ -1,0 +1,15 @@
+[Unit]
+Description=Gunicorn service python-sample-app
+After=network.target
+
+[Service]
+Type=simple
+Environment=POSTGRESQL_URL=postgresql://worker:worker@192.168.0.160/app
+User=deployer
+WorkingDirectory=/opt/python-sample-app
+ExecStart=/usr/local/bin/gunicorn --workers 2 --bind :8000 app:api
+StandardInput=tty-force
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

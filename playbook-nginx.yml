@@ -1,0 +1,23 @@
+---
+  - name: install nginx
+    hosts: all
+    become: true
+    vars_files:
+      - vars/nginx_vars.yml
+
+    tasks:
+    - name: create /static dir
+      file:
+        path: /var/www/html/static
+        state: directory
+    - name: create test.html page
+      copy:
+        dest: /var/www/html/static/test.html
+        content: |
+          <html>
+          test static
+          </html>
+
+    roles:
+      #- ansible-role-nginx
+      - geerlingguy.nginx

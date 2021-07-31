@@ -1,0 +1,7 @@
+---
+postgresql_databases:
+  - name: "app"
+postgresql_users:
+  - name: "worker"
+    password: "worker"
+postgresql_version: "12"

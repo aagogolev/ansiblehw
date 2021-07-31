@@ -1,0 +1,74 @@
+---
+#-----------UBUNTU------------------------ 
+- name: install a list of packages ubuntu/debian
+  apt:
+    name:
+    - python3
+    - python3-pip
+    - libpq-dev
+    update_cache: yes
+  when: ansible_os_family == "Debian"
+
+#------------CENTOS---------------
+- name: install a list of packages centos
+  yum:
+    name:
+    - python3
+    - python3-pip
+    - libpq-devel
+    - git
+    - python3-devel
+    - postgresql-devel
+    - postgresql-libs
+    update_cache: yes
+  when: ansible_os_family == "RedHat"
+
+- name: install gcc
+  dnf:
+    name  : "gcc"
+  when: ansible_os_family == "RedHat"
+
+- name: install app
+  git:
+    repo  : "https://github.com/mbaran0v/python-sample-app.git"
+    dest  : "/opt/{{ app_name }}"
+    update: yes
+
+- name: install app dependencies
+  pip:
+   requirements: "/opt/{{ app_name }}/requirements.txt"
+
+- name: set env
+  shell: export POSTGRESQL_URL=postgresql://worker:worker@192.168.0.160/app
+  when: ansible_os_family == "RedHat"
+
+- name: upgrade db
+  command: flask db upgrade
+  # shell: "flask db upgrade"
+  args:
+     chdir: /opt/python-sample-app/
+  environment:
+     # POSTGRESQL_URL: 'postgresql://{{ postgres_user }}:{{ postgres_user_password }}@192.168.0.160/app'
+     POSTGRESQL_URL: postgresql://worker:worker@192.168.0.160/app
+     FLASK_APP     : app.py
+
+- name: add the user deployer
+  user:
+    name       : "{{ user_deployer }}"
+    password   : "{{ user_deployer_password }}"
+    create_home: false
+
+- name: install gunicorn
+  pip:
+    name: gunicorn
+
+- name: install gunicorn service
+  template:
+    src : templates/gunicorn.j2
+    dest: /etc/systemd/system/{{ app_name }}_gunicorn.service
+
+- name: gunicorn service
+  systemd:
+    name   : "{{ app_name }}_gunicorn.service"
+    state  : restarted
+    enabled: yes

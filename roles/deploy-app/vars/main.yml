@@ -1,0 +1,7 @@
+---
+app_name: 'python-sample-app'
+user_deployer: "deployer"
+user_deployer_password: "deployer"
+postgres_user: "worker"
+postgres_user_password: "worker"
+flask_app: 'app.py'

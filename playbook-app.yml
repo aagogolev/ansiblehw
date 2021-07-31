@@ -1,0 +1,7 @@
+---
+ - name: install app
+   hosts: all
+   become: true
+
+   roles:
+    - deploy-app

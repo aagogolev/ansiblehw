@@ -1,0 +1,20 @@
+---
+ - name: install postgresql
+   hosts: all
+   become: true
+   vars_files:
+    - vars/postgres_vars.yml
+
+   roles:
+    - geerlingguy.postgresql
+
+   tasks:
+    - name: config listen address in postgresql.conf
+      lineinfile:
+        path: /etc/postgresql/{{ postgresql_version }}/main/postgresql.conf
+        regexp: '^#listen_addresses ='
+        line: "listen_addresses = '0.0.0.0'"
+    - name: config allow user in pg_hba.conf
+      lineinfile:
+        path: /etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf
+        line: 'host all all 0.0.0.0/0   md5'
